@@ -73,23 +73,27 @@
             </section>
 
             <!-- VIEW: ALUNOS -->
-            <section id="view-alunos" class="view-section hidden">
-                <!-- O conteúdo será montado pelo alunos.js -->
-            </section>
-
-            <!-- VIEW: LIVROS -->
-            <section id="view-livros" class="view-section hidden">
-                <!-- O conteúdo será montado pelo livros.js -->
-            </section>
-
-            <!-- VIEW: EMPRÉSTIMOS -->
-            <section id="view-emprestimos" class="view-section hidden">
-                <!-- O conteúdo será montado pelo emprestimos.js -->
-            </section>
-
+<section id="view-alunos" class="view-section hidden">
+    
+    <!-- Cabeçalho e Abas -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Gestão de Alunos</h2>
+        
+        <!-- Controles de Aba (Cadastrados / Novo) -->
+        <div class="flex bg-[#1E293B] p-1 rounded-lg border border-slate-700/50 w-full sm:w-auto">
+            <button id="tab-btn-lista" class="flex-1 sm:flex-none px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium transition-colors shadow">
+                Cadastrados
+            </button>
+            <button id="tab-btn-novo" class="flex-1 sm:flex-none px-4 py-2 rounded-md text-slate-400 hover:text-white text-sm font-medium transition-colors">
+                Novo Cadastro
+            </button>
         </div>
-    </main>
+    </div>
 
+    <!-- Container onde o JS vai injetar a Lista e o Formulário magicamente -->
+    <div id="alunos-content-area"></div>
+
+</section>
     <!-- Script Principal (Módulo ES6) -->
     <script type="module" src="js/app.js"></script>
     
