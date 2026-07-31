@@ -3,48 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca | Login</title>
+    <title>Login | Biblioteca EGP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[#0F172A] min-h-screen flex items-center justify-center font-poppins text-white bg-pattern">
+<body class="bg-[#0F172A] min-h-screen flex items-center justify-center font-sans text-slate-200 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
     
-    <div class="w-full max-w-md p-6 sm:p-8 mx-4 sm:mx-0 bg-[#1E293B]/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 glass-effect">
-        <div class="text-center mb-8">
-            <div class="flex justify-center mb-6">
-                <img src="logo.png" alt="Escola de Governo de Pernambuco" class="h-24 object-contain">
-            </div>
+    <div class="glass w-full max-w-md p-8 rounded-2xl relative overflow-hidden">
+        <!-- Decoração de fundo -->
+        <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        
+        <div class="text-center mb-8 relative z-10">
+            <img src="assets/logo.png" alt="Logo EGP" class="h-20 mx-auto mb-4 object-contain">
             <h1 class="text-2xl font-bold text-white">Sistema de Biblioteca</h1>
-            <p class="text-slate-400 text-sm mt-2">Acesse o painel de gerenciamento</p>
+            <p class="text-slate-400 text-sm mt-1">Acesso Restrito</p>
         </div>
 
-        <form id="loginForm" class="space-y-6">
+        <form id="form-login" class="space-y-5 relative z-10">
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-2">Usuário</label>
+                <label class="block text-sm font-medium text-slate-300 mb-1">Usuário</label>
                 <div class="relative">
-                    <i class="fa-regular fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="username" required class="w-full bg-[#0F172A] border border-slate-600 rounded-lg py-3 px-10 text-white focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-colors">
+                    <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-500"></i>
+                    <input type="text" id="usuario" required class="w-full bg-[#1E293B] border border-slate-700 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-2">Senha</label>
+                <label class="block text-sm font-medium text-slate-300 mb-1">Senha</label>
                 <div class="relative">
-                    <i class="fa-solid fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input type="password" id="password" required class="w-full bg-[#0F172A] border border-slate-600 rounded-lg py-3 px-10 text-white focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-colors">
+                    <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-500"></i>
+                    <input type="password" id="senha" required class="w-full bg-[#1E293B] border border-slate-700 rounded-lg py-3 pl-10 pr-10 text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    <button type="button" id="toggle-senha" class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-300">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
                 </div>
             </div>
-            <button type="submit" class="w-full bg-[#2563EB] hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-colors shadow-lg shadow-blue-500/25">
+            
+            <div id="msg-erro" class="hidden text-red-400 text-sm text-center bg-red-900/20 py-2 rounded">
+                Usuário ou senha incorretos.
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all">
                 Entrar no Sistema
             </button>
         </form>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        // Lógica isolada apenas para o Login
+        document.getElementById('toggle-senha').addEventListener('click', function() {
+            const input = document.getElementById('senha');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
+        document.getElementById('form-login').addEventListener('submit', (e) => {
             e.preventDefault();
-            window.location.href = 'index.html'; 
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            // Validação fictícia para o MVP - Pode ser adaptada para banco real depois
+            if (usuario === 'admin' && senha === '123456') {
+                sessionStorage.setItem('auth_token', 'egp_auth_valid');
+                sessionStorage.setItem('usuario_logado', 'Administrador');
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('msg-erro').classList.remove('hidden');
+            }
         });
     </script>
 </body>
