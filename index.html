@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[#0F172A] min-h-screen flex font-sans text-slate-200 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] overflow-hidden">
+<body class="bg-[#0F172A] min-h-screen flex font-sans text-slate-200 overflow-hidden">
     
     <!-- Sidebar -->
     <aside class="w-64 glass border-r border-slate-700/50 flex flex-col h-screen relative z-20">
@@ -18,27 +18,18 @@
         
         <div class="flex-1 overflow-y-auto py-6 px-4">
             <nav class="space-y-2">
-                <a href="#" data-target="dashboard" class="nav-link active text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-l-xl transition-all">
+                <a href="#" data-target="dashboard" class="nav-link active text-white bg-slate-800/50 flex items-center px-4 py-3 rounded-l-xl transition-all">
                     <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
                 </a>
                 <a href="#" data-target="alunos" class="nav-link text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-l-xl transition-all">
                     <i class="fa-solid fa-user-graduate w-6"></i> Alunos
                 </a>
-                
-                <!-- NOVO MENU EMPRÉSTIMOS V1.1 -->
                 <a href="#" data-target="emprestimos" class="nav-link text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-l-xl transition-all">
                     <i class="fa-solid fa-hand-holding-hand w-6"></i> Empréstimos
                 </a>
-                
-                <!-- NOVO MENU CONFIGURAÇÕES V1.1 -->
                 <a href="#" data-target="configuracoes" class="nav-link text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-l-xl transition-all">
                     <i class="fa-solid fa-gear w-6"></i> Configurações
                 </a>
-                
-                <!-- BOTAO DE BACKUP V1.1 -->
-                <button id="btn-exportar-backup" class="w-full text-left text-slate-400 hover:bg-blue-900/30 hover:text-blue-400 flex items-center px-4 py-3 rounded-l-xl transition-all mt-4 border border-transparent hover:border-blue-800/50">
-                    <i class="fa-solid fa-cloud-arrow-down w-6"></i> Salvar Backup
-                </button>
             </nav>
         </div>
 
@@ -51,18 +42,15 @@
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <!-- Efeito de fundo -->
+        <!-- Efeito de luz azul sutil no fundo -->
         <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 pointer-events-none"></div>
 
         <div class="flex-1 overflow-y-auto p-8 relative z-10">
             
-            <!-- ========================================== -->
-            <!-- MÓDULO: DASHBOARD                          -->
-            <!-- ========================================== -->
+            <!-- MÓDULO: DASHBOARD -->
             <section id="dashboard" class="page-section animate-fade-in">
                 <h2 class="text-3xl font-bold text-white mb-8">Visão Geral</h2>
                 
-                <!-- Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="dashboard-cards">
                     <div class="glass rounded-2xl p-6 relative overflow-hidden group">
                         <div class="flex justify-between items-center mb-4 relative z-10">
@@ -95,7 +83,6 @@
                     </div>
                 </div>
 
-                <!-- Alertas -->
                 <div class="glass rounded-2xl p-6">
                     <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
                         <i class="fa-solid fa-bell text-amber-500"></i> Alertas de Empréstimos
@@ -119,141 +106,17 @@
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- MÓDULO: ALUNOS                             -->
-            <!-- ========================================== -->
+            <!-- MÓDULO: ALUNOS -->
             <section id="alunos" class="page-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-3xl font-bold text-white">Gestão de Alunos</h2>
                 </div>
-
-                <div class="glass rounded-2xl overflow-hidden">
-                    <!-- Tabs -->
-                    <div class="flex border-b border-slate-700/50 bg-[#1E293B]/50">
-                        <button class="tab-btn active px-6 py-4 text-sm font-medium text-blue-400 border-b-2 border-blue-500 transition-all focus:outline-none" data-tab="lista-alunos">
-                            <i class="fa-solid fa-list mr-2"></i> Alunos Cadastrados
-                        </button>
-                        <button class="tab-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-all focus:outline-none" data-tab="form-aluno">
-                            <i class="fa-solid fa-user-plus mr-2"></i> Novo Cadastro
-                        </button>
-                    </div>
-
-                    <!-- Tab Content: Lista -->
-                    <div id="lista-alunos" class="tab-content p-6 block">
-                        <div class="flex gap-4 mb-6">
-                            <div class="relative flex-1">
-                                <i class="fa-solid fa-search absolute left-3 top-3 text-slate-500"></i>
-                                <input type="text" id="busca-aluno" placeholder="Buscar por nome ou matrícula..." class="w-full bg-[#0F172A] border border-slate-700 rounded-lg py-2.5 pl-10 pr-4 text-white focus:border-blue-500 outline-none">
-                            </div>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="text-slate-400 border-b border-slate-700/50 text-sm">
-                                        <th class="pb-3 font-medium">Foto</th>
-                                        <th class="pb-3 font-medium">Matrícula</th>
-                                        <th class="pb-3 font-medium">Nome Completo</th>
-                                        <th class="pb-3 font-medium">Turma/Turno</th>
-                                        <th class="pb-3 font-medium">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabela-alunos" class="text-sm">
-                                    <!-- Injetado via JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Tab Content: Form -->
-                    <div id="form-aluno" class="tab-content p-6 hidden">
-                        <form id="cadastro-aluno-form" class="space-y-6">
-                            <input type="hidden" id="aluno-id">
-                            
-                            <div class="flex flex-col md:flex-row gap-6">
-                                <!-- Câmera -->
-                                <div class="w-full md:w-1/3 flex flex-col items-center">
-                                    <label class="block text-sm text-slate-400 mb-2 w-full text-center">Foto do Aluno</label>
-                                    <div class="relative w-48 h-48 rounded-xl overflow-hidden bg-[#0F172A] border border-slate-700 flex items-center justify-center group">
-                                        <video id="camera-preview" class="absolute w-full h-full object-cover hidden" autoplay playsinline></video>
-                                        <img id="foto-preview" class="absolute w-full h-full object-cover hidden">
-                                        <div id="camera-placeholder" class="text-slate-500 text-center flex flex-col items-center justify-center">
-                                            <i class="fa-solid fa-camera text-3xl mb-2"></i>
-                                            <span class="text-xs">Sem foto</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 flex gap-2 justify-center w-full">
-                                        <button type="button" id="btn-iniciar-camera" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded text-sm transition-colors flex-1 flex items-center justify-center gap-1">
-                                            <i class="fa-solid fa-video"></i> Ligar
-                                        </button>
-                                        <button type="button" id="btn-switch-camera" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded text-sm transition-colors hidden" title="Trocar Câmera">
-                                            <i class="fa-solid fa-sync-alt"></i>
-                                        </button>
-                                        <button type="button" id="btn-capturar-foto" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm transition-colors hidden flex-1 flex items-center justify-center gap-1">
-                                            <i class="fa-solid fa-camera-retro"></i> Tirar
-                                        </button>
-                                        <button type="button" id="btn-remover-foto" class="bg-red-900/50 hover:bg-red-800/80 text-red-200 px-3 py-1.5 rounded text-sm transition-colors hidden flex-1 flex items-center justify-center gap-1">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                    <canvas id="canvas-foto" class="hidden"></canvas>
-                                </div>
-
-                                <!-- Campos -->
-                                <div class="w-full md:w-2/3 space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Matrícula *</label>
-                                            <input type="text" id="aluno-matricula" required class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Nome Completo *</label>
-                                            <input type="text" id="aluno-nome" required class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Telefone</label>
-                                            <input type="tel" id="aluno-telefone" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Série / Turma *</label>
-                                            <input type="text" id="aluno-turma" required placeholder="Ex: 1º Ano A" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Turno *</label>
-                                            <select id="aluno-turno" required class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                                <option value="Manhã">Manhã</option>
-                                                <option value="Tarde">Tarde</option>
-                                                <option value="Noite">Noite</option>
-                                                <option value="Integral">Integral</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-slate-400 mb-1">Responsável</label>
-                                            <input type="text" id="aluno-responsavel" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end pt-4 border-t border-slate-700/50">
-                                <button type="button" id="btn-cancelar-aluno" class="mr-4 text-slate-400 hover:text-white px-4 py-2 hidden">Cancelar</button>
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-save"></i> Salvar Aluno
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                <div class="glass rounded-2xl p-6 text-center text-slate-400 py-20">
+                    <p>O módulo de alunos será renderizado aqui pelo seu alunos.js</p>
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- MÓDULO: EMPRÉSTIMOS (V1.1)                 -->
-            <!-- ========================================== -->
+            <!-- MÓDULO: EMPRÉSTIMOS -->
             <section id="emprestimos" class="page-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-3xl font-bold text-white">Gestão de Empréstimos</h2>
@@ -261,61 +124,41 @@
                         <i class="fa-solid fa-plus"></i> Novo Empréstimo
                     </button>
                 </div>
-                
-                <!-- A Tabela de Empréstimos será injetada aqui pelo JS na Etapa 2 -->
                 <div id="container-tabela-emprestimos" class="glass rounded-2xl p-6">
                     <div class="text-center py-8 text-slate-500">
-                        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-                        <p>Carregando módulo de empréstimos...</p>
+                        <p>Carregando tabela de empréstimos...</p>
                     </div>
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- MÓDULO: CONFIGURAÇÕES (V1.1)               -->
-            <!-- ========================================== -->
+            <!-- MÓDULO: CONFIGURAÇÕES -->
             <section id="configuracoes" class="page-section hidden animate-fade-in">
                 <h2 class="text-3xl font-bold text-white mb-8">Configurações do Sistema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <!-- Card Configurações -->
-                    <div class="glass rounded-2xl p-6">
-                        <h3 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2">Parâmetros da Biblioteca</h3>
-                        <form id="form-config" class="space-y-4">
+                
+                <div class="glass rounded-2xl p-6 max-w-2xl">
+                    <h3 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2">Parâmetros da Biblioteca</h3>
+                    <form id="form-config" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Nome da Biblioteca</label>
+                            <input type="text" id="config-nome" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm text-slate-400 mb-1">Nome da Biblioteca</label>
-                                <input type="text" id="config-nome" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
+                                <label class="block text-sm text-slate-400 mb-1">Dias padrão (Empréstimo)</label>
+                                <input type="number" id="config-dias" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm text-slate-400 mb-1">Dias padrão (Empréstimo)</label>
-                                    <input type="number" id="config-dias" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-slate-400 mb-1">Máx. Livros por Aluno</label>
-                                    <input type="number" id="config-max" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
-                                </div>
+                            <div>
+                                <label class="block text-sm text-slate-400 mb-1">Máx. Livros por Aluno</label>
+                                <input type="number" id="config-max" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-2.5 text-white focus:border-blue-500 outline-none">
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg mt-4 transition-all border-none focus:outline-none">Salvar Configurações</button>
-                        </form>
-                    </div>
-
-                    <!-- Card Restaurar Backup -->
-                    <div class="glass rounded-2xl p-6 border border-amber-900/30">
-                        <h3 class="text-xl font-bold text-amber-500 mb-4 border-b border-slate-700 pb-2">Restauração de Dados</h3>
-                        <p class="text-sm text-slate-400 mb-4">Importe um arquivo .json para restaurar o sistema. Atenção: Isso substituirá os dados atuais.</p>
-                        <input type="file" id="input-importar-backup" accept=".json" class="hidden">
-                        <label for="input-importar-backup" class="cursor-pointer flex items-center justify-center gap-2 w-full bg-[#0F172A] hover:bg-slate-800 border border-slate-700 text-slate-300 py-3 rounded-lg transition-all">
-                            <i class="fa-solid fa-file-import"></i> Selecionar arquivo de backup
-                        </label>
-                    </div>
-
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg mt-4 transition-all border-none focus:outline-none">Salvar Configurações</button>
+                    </form>
                 </div>
             </section>
 
         </div>
     </main>
 </body>
-<!-- Script Principal -->
 <script type="module" src="js/app.js"></script>
 </html>
