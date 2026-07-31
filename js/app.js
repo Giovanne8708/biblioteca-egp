@@ -1,7 +1,8 @@
 import { initDB } from './storage.js';
 import { initRouter } from './router.js';
 import { initConfiguracoes } from './configuracoes.js';
-import { initCamera } from './camera.js'; // 1. IMPORTA A CÂMERA AQUI
+import { initCamera } from './camera.js';
+import { initAlunos } from './alunos.js'; // 1. IMPORTA ALUNOS AQUI
 
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('auth_token');
@@ -10,11 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // Liga todos os módulos do sistema
+    // Liga todos os módulos
     initDB();
     initRouter();
     initConfiguracoes();
-    initCamera(); // 2. LIGA A CÂMERA AQUI
+    initCamera();
+    initAlunos(); // 2. LIGA ALUNOS AQUI
 
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
