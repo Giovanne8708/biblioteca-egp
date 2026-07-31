@@ -15,8 +15,8 @@
         <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
         
         <div class="text-center mb-8 relative z-10">
-            <!-- LOGO CORRIGIDA COM FALLBACK -->
-            <img src="assets/logo.png" alt="Logo EGP" class="h-20 mx-auto mb-4 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/150x40/1E293B/e2e8f0?text=EGP+Biblioteca'">
+            <!-- LOGO COM CACHE BUSTING (?v=1) PARA FORÇAR ATUALIZAÇÃO -->
+            <img src="assets/logo.png?v=1" alt="Logo EGP" class="h-20 mx-auto mb-4 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/150x40/1E293B/e2e8f0?text=EGP+Biblioteca'">
             
             <h1 class="text-2xl font-bold text-white">Sistema de Biblioteca</h1>
             <p class="text-slate-400 text-sm mt-1">Acesso Restrito</p>
@@ -70,7 +70,7 @@
             const usuario = document.getElementById('usuario').value;
             const senha = document.getElementById('senha').value;
 
-            // Validação fictícia para o MVP - Pode ser adaptada para banco real depois
+            // Validação fictícia para o MVP
             if (usuario === 'admin' && senha === '123456') {
                 sessionStorage.setItem('auth_token', 'egp_auth_valid');
                 sessionStorage.setItem('usuario_logado', 'Administrador');
