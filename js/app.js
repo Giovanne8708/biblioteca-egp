@@ -1,37 +1,32 @@
 import { initDB } from './storage.js';
 import { initRouter } from './router.js';
-import { initDashboard } from './dashboard.js';
-import { initAlunos } from './alunos.js';
-import { registerAction } from './historico.js';
+// Se você tiver o arquivo alunos.js, mantenha a importação dele aqui se necessário
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Segurança
-    if (!sessionStorage.getItem('auth_token')) {
+    // 1. TRAVA DE SEGURANÇA (Verifica o Login)
+    const token = sessionStorage.getItem('auth_token');
+    if (!token) {
         window.location.href = 'login.html';
-        return;
+        return; // Para tudo imediatamente se não tiver logado
     }
 
-    // 2. Inicia o Banco de Dados
+    // 2. INICIA O BANCO DE DADOS LOCAL
     initDB();
 
-    // 3. Registra o Histórico de Login
-    if (!sessionStorage.getItem('login_registrado')) {
-        registerAction('Login', 'Acesso autorizado ao sistema.');
-        sessionStorage.setItem('login_registrado', 'true');
-    }
-
-    // 4. Inicia as Telas
-    initDashboard();
-    initAlunos();
+    // 3. LIGA OS BOTÕES DO MENU LATERAL
     initRouter();
 
-    // 5. BOTÃO DE SAIR (Corrigido!)
+    // 4. CONFIGURA O BOTÃO DE SAIR (LOGOUT)
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
-            registerAction('Logout', 'Usuário encerrou a sessão.');
-            sessionStorage.clear();
+            // Limpa a memória do navegador e joga pro login
+            sessionStorage.removeItem('auth_token');
+            sessionStorage.removeItem('usuario_logado');
             window.location.href = 'login.html';
         });
     }
+
+    // (Opcional) Inicializa funções de outros módulos, como o de Alunos, se já existirem
+    // initAlunos(); 
 });
