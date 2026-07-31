@@ -1,96 +1,78 @@
-/**
- * MÓDULO DE CÂMERA (WebRTC Avançado)
- */
-import { showAlert } from './utils.js';
+// ==========================================
+// MÓDULO DE CÂMERA - CAPTURA DE FOTOS
+// ==========================================
 
-let streamCamera = null;
-let currentFacingMode = 'user'; // Padrão: Frontal
-let hasMultipleCameras = false;
-
-// Verifica quantas lentes de vídeo existem no aparelho
-const checkCameras = async (btnTrocar) => {
-    try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoInputs = devices.filter(device => device.kind === 'videoinput');
-        if (videoInputs.length > 1) {
-            hasMultipleCameras = true;
-            btnTrocar.classList.remove('hidden');
-        }
-    } catch (e) {
-        console.error("Erro ao enumerar dispositivos:", e);
-    }
-};
-
-export const initCamera = (videoElement, canvasElement, previewElement, inputHidden, btnStart, btnCapture, btnCancel, btnTrocar) => {
+export function initCamera() {
+    const video = document.getElementById('camera-preview');
+    const canvas = document.getElementById('canvas-foto');
+    const fotoPreview = document.getElementById('foto-preview');
+    const placeholder = document.getElementById('camera-placeholder');
     
-    checkCameras(btnTrocar);
+    const btnIniciar = document.getElementById('btn-iniciar-camera');
+    const btnCapturar = document.getElementById('btn-capturar-foto');
+    const btnRemover = document.getElementById('btn-remover-foto');
+    
+    let stream = null;
 
-    const ligar = async () => {
-        if (streamCamera) desligarCamera();
+    if (!btnIniciar) return;
+
+    // LIGAR A CÂMERA
+    btnIniciar.addEventListener('click', async () => {
         try {
-            streamCamera = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }, 
-                audio: false 
-            });
-            videoElement.srcObject = streamCamera;
-            videoElement.classList.remove('hidden');
-            previewElement.classList.add('hidden');
+            // Pede permissão ao navegador e liga o vídeo
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+            video.srcObject = stream;
             
-            btnStart.classList.add('hidden');
-            btnCapture.classList.remove('hidden');
-            btnCancel.classList.remove('hidden');
-            if(hasMultipleCameras) btnTrocar.classList.remove('hidden');
-        } catch (erro) {
-            showAlert("Erro ao acessar a câmera.", "error");
+            // Ajusta o visual (mostra vídeo, esconde ícone cinza)
+            video.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            fotoPreview.classList.add('hidden');
+            
+            // Troca os botões
+            btnIniciar.classList.add('hidden');
+            btnCapturar.classList.remove('hidden');
+            btnRemover.classList.add('hidden');
+        } catch (err) {
+            alert('Erro ao acessar a câmera. Verifique se o navegador tem permissão.');
+            console.error(err);
         }
-    };
-
-    btnStart.addEventListener('click', ligar);
-
-    btnTrocar.addEventListener('click', () => {
-        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-        ligar();
     });
 
-    btnCapture.addEventListener('click', () => {
-        if (!streamCamera) return;
-        // Mantém a imagem original, sem filtros
-        canvasElement.width = videoElement.videoWidth;
-        canvasElement.height = videoElement.videoHeight;
-        canvasElement.getContext('2d').drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    // TIRAR A FOTO
+    btnCapturar.addEventListener('click', () => {
+        if (!stream) return;
         
-        const fotoOriginal = canvasElement.toDataURL('image/png');
-        previewElement.src = fotoOriginal;
-        inputHidden.value = fotoOriginal;
+        // Desenha o quadro atual do vídeo no canvas invisível
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        videoElement.classList.add('hidden');
-        previewElement.classList.remove('hidden');
-        desligarCamera();
+        // Transforma o canvas em uma imagem real (Base64)
+        const fotoData = canvas.toDataURL('image/jpeg');
+        fotoPreview.src = fotoData;
         
-        btnCapture.classList.add('hidden');
-        btnTrocar.classList.add('hidden');
-        btnStart.classList.remove('hidden');
-        btnStart.innerHTML = '<i class="fa-solid fa-rotate-right mr-2"></i>Refazer Foto';
+        // Ajusta o visual (mostra a foto tirada, esconde o vídeo rodando)
+        video.classList.add('hidden');
+        fotoPreview.classList.remove('hidden');
+        
+        // Troca os botões
+        btnCapturar.classList.add('hidden');
+        btnRemover.classList.remove('hidden');
+        
+        // Desliga a luz da câmera para economizar bateria e memória
+        stream.getTracks().forEach(track => track.stop());
     });
 
-    btnCancel.addEventListener('click', () => {
-        desligarCamera();
-        videoElement.classList.add('hidden');
-        previewElement.src = '';
-        previewElement.classList.remove('hidden');
-        inputHidden.value = '';
+    // REMOVER A FOTO
+    btnRemover.addEventListener('click', () => {
+        fotoPreview.src = ''; // Apaga a imagem
         
-        btnCapture.classList.add('hidden');
-        btnCancel.classList.add('hidden');
-        btnTrocar.classList.add('hidden');
-        btnStart.classList.remove('hidden');
-        btnStart.innerHTML = '<i class="fa-solid fa-camera mr-2"></i>Ligar Câmera';
+        // Volta para o estado inicial (quadrado cinza)
+        fotoPreview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        
+        // Troca os botões
+        btnRemover.classList.add('hidden');
+        btnIniciar.classList.remove('hidden');
     });
-};
-
-export const desligarCamera = () => {
-    if (streamCamera) {
-        streamCamera.getTracks().forEach(track => track.stop());
-        streamCamera = null;
-    }
-};
+}
