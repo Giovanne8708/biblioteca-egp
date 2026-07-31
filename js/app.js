@@ -1,7 +1,7 @@
 import { initDB } from './storage.js';
 import { initRouter } from './router.js';
 import { initConfiguracoes } from './configuracoes.js';
-// Se tiver o import do alunos.js aí, deixe ele também!
+import { initCamera } from './camera.js'; // 1. IMPORTA A CÂMERA AQUI
 
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('auth_token');
@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // Liga o banco, menus e configurações
+    // Liga todos os módulos do sistema
     initDB();
     initRouter();
     initConfiguracoes();
+    initCamera(); // 2. LIGA A CÂMERA AQUI
 
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
