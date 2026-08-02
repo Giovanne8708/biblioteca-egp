@@ -47,12 +47,10 @@
         </div>
     </aside>
 
-    <!-- OVERLAY MOBILE -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden"></div>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative pt-16 md:pt-0 w-full">
-        <!-- Luz de Fundo -->
         <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 pointer-events-none"></div>
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8 relative z-10 w-full">
@@ -118,11 +116,46 @@
 
                     <div id="form-aluno" class="tab-content p-4 md:p-6 hidden w-full">
                         <form id="cadastro-aluno-form" class="space-y-4 md:space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm text-slate-400 mb-1">Foto do Aluno (Opcional)</label>
-                                    <input type="file" id="aluno-foto" accept="image/*" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg text-white file:mr-4 file:py-3 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                            
+                            <!-- NOVA SEÇÃO DE FOTO (UPLOAD + CÂMERA) -->
+                            <div class="bg-[#1E293B]/50 p-4 rounded-xl border border-slate-700/50">
+                                <label class="block text-sm text-slate-400 mb-3 font-medium">Foto do Aluno (Opcional)</label>
+                                
+                                <div class="flex flex-wrap gap-3 mb-3">
+                                    <!-- Upload Tradicional -->
+                                    <div class="relative">
+                                        <input type="file" id="aluno-foto-upload" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                        <button type="button" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all">
+                                            <i class="fa-solid fa-upload"></i> Enviar Foto
+                                        </button>
+                                    </div>
+                                    <!-- Botão de Ligar Câmera -->
+                                    <button type="button" id="btn-ligar-camera" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all">
+                                        <i class="fa-solid fa-camera"></i> Abrir Câmera
+                                    </button>
                                 </div>
+
+                                <!-- Container da Câmera (Oculto por padrão) -->
+                                <div id="camera-container" class="hidden flex-col items-center gap-3 bg-black/30 p-4 rounded-lg mt-3">
+                                    <video id="camera-video" class="w-full max-w-sm rounded-lg bg-black" autoplay playsinline></video>
+                                    <canvas id="camera-canvas" class="hidden"></canvas>
+                                    <div class="flex gap-2">
+                                        <button type="button" id="btn-capturar-foto" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all">Capturar</button>
+                                        <button type="button" id="btn-fechar-camera" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-all">Cancelar</button>
+                                    </div>
+                                </div>
+
+                                <!-- Preview da Imagem Selecionada/Capturada -->
+                                <div id="foto-preview-container" class="hidden items-center gap-4 mt-4 bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 w-fit">
+                                    <img id="foto-preview-img" src="" class="w-16 h-16 object-cover rounded shadow-md">
+                                    <button type="button" id="btn-remover-foto" class="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 transition-all"><i class="fa-solid fa-trash"></i> Remover</button>
+                                </div>
+                                
+                                <!-- Input escondido que guarda o Base64 final da foto para salvar no banco -->
+                                <input type="hidden" id="aluno-foto-base64">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm text-slate-400 mb-1">Matrícula *</label>
                                     <input type="text" id="aluno-matricula" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none">
@@ -189,10 +222,16 @@
                     <div id="form-emprestimo" class="tab-content-emp p-4 md:p-6 hidden w-full">
                         <form id="cadastro-emprestimo-form" class="space-y-4 md:space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm text-slate-400 mb-1">Selecionar Aluno *</label>
-                                    <select id="emp-aluno" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none"></select>
+                                
+                                <!-- CAMPO DE BUSCA INTELIGENTE DE ALUNOS -->
+                                <div class="md:col-span-2 relative">
+                                    <label class="block text-sm text-slate-400 mb-1">Pesquisar Aluno (Nome ou Matrícula) *</label>
+                                    <input type="text" id="emp-aluno-busca" placeholder="Digite para buscar..." autocomplete="off" class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none transition-all">
+                                    <input type="hidden" id="emp-aluno-id" required>
+                                    <!-- Lista de sugestões -->
+                                    <ul id="emp-aluno-lista" class="absolute z-50 w-full bg-[#1E293B] border border-slate-600 rounded-lg mt-1 max-h-48 overflow-y-auto hidden shadow-2xl"></ul>
                                 </div>
+
                                 <div>
                                     <label class="block text-sm text-slate-400 mb-1">Título do Livro *</label>
                                     <input type="text" id="emp-livro" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none">
