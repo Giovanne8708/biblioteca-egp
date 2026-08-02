@@ -104,6 +104,7 @@
                             <table class="w-full text-left min-w-[600px] border-collapse">
                                 <thead>
                                     <tr class="text-slate-400 border-b border-slate-700/50 text-sm">
+                                        <th class="pb-3 font-medium w-16">Foto</th>
                                         <th class="pb-3 font-medium">Matrícula</th>
                                         <th class="pb-3 font-medium">Nome Completo</th>
                                         <th class="pb-3 font-medium">Turma/Turno</th>
@@ -118,6 +119,10 @@
                     <div id="form-aluno" class="tab-content p-4 md:p-6 hidden w-full">
                         <form id="cadastro-aluno-form" class="space-y-4 md:space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm text-slate-400 mb-1">Foto do Aluno (Opcional)</label>
+                                    <input type="file" id="aluno-foto" accept="image/*" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg text-white file:mr-4 file:py-3 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                </div>
                                 <div>
                                     <label class="block text-sm text-slate-400 mb-1">Matrícula *</label>
                                     <input type="text" id="aluno-matricula" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none">
@@ -168,7 +173,8 @@
                             <table class="w-full text-left min-w-[700px] border-collapse">
                                 <thead>
                                     <tr class="text-slate-400 border-b border-slate-700/50 text-sm">
-                                        <th class="pb-3 font-medium">Aluno</th>
+                                        <th class="pb-3 font-medium w-16">Foto</th>
+                                        <th class="pb-3 font-medium">Aluno / Turma</th>
                                         <th class="pb-3 font-medium">Livro</th>
                                         <th class="pb-3 font-medium">Datas</th>
                                         <th class="pb-3 font-medium">Status</th>
