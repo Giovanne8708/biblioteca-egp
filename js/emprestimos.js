@@ -18,7 +18,6 @@ export function initEmprestimos() {
             const novoEmprestimo = {
                 id: Date.now().toString(),
                 alunoId: aluno.id,
-                alunoNome: aluno.nome,
                 livro: document.getElementById('emp-livro').value.trim(),
                 dataRetirada: document.getElementById('emp-data-retirada').value,
                 dataPrevisao: document.getElementById('emp-data-prevista').value,
@@ -27,7 +26,7 @@ export function initEmprestimos() {
 
             salvarEmprestimo(novoEmprestimo);
             form.reset();
-            alert('Empréstimo registrado com sucesso!');
+            alert('Empréstimo registrado!');
             
             const btnLista = document.querySelector('[data-tab="lista-emprestimos"]');
             if(btnLista) btnLista.click();
@@ -67,7 +66,7 @@ function carregarAlunosSelect() {
     
     select.innerHTML = '<option value="" disabled selected>Selecione um aluno...</option>';
     alunos.forEach(a => {
-        select.innerHTML += `<option value="${a.id}">${a.nome}</option>`;
+        select.innerHTML += `<option value="${a.id}">${a.nome} (${a.turma})</option>`;
     });
 }
 
@@ -76,10 +75,11 @@ export function renderTabelaEmprestimos() {
     if (!tbody) return;
 
     const emprestimos = getEmprestimos();
+    const alunos = getAlunos();
     tbody.innerHTML = '';
 
     if (emprestimos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-500">Nenhum empréstimo registrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-500">Nenhum empréstimo registrado.</td></tr>`;
         return;
     }
 
@@ -87,6 +87,8 @@ export function renderTabelaEmprestimos() {
     hoje.setHours(0,0,0,0);
 
     emprestimos.forEach(emp => {
+        const aluno = alunos.find(a => a.id === emp.alunoId) || { nome: 'Aluno Removido', turma: 'N/A', foto: '' };
+        
         const tr = document.createElement('tr');
         tr.className = 'border-b border-slate-700/50 text-slate-300';
         
@@ -110,8 +112,16 @@ export function renderTabelaEmprestimos() {
             ? `<button onclick="registrarDevolucao('${emp.id}')" class="text-emerald-400 hover:text-emerald-300 mr-3"><i class="fa-solid fa-rotate-left"></i></button>`
             : '';
 
+        const imgHtml = aluno.foto 
+            ? `<img src="${aluno.foto}" alt="Foto" class="w-12 h-12 object-contain bg-black/20 rounded">`
+            : `<div class="w-12 h-12 flex items-center justify-center bg-slate-800 rounded text-slate-500"><i class="fa-solid fa-user"></i></div>`;
+
         tr.innerHTML = `
-            <td class="py-4 font-medium text-white">${emp.alunoNome}</td>
+            <td class="py-4">${imgHtml}</td>
+            <td class="py-4">
+                <div class="font-medium text-white">${aluno.nome}</div>
+                <div class="text-xs text-slate-400 border border-slate-700 inline-block px-2 py-0.5 mt-1 rounded">${aluno.turma}</div>
+            </td>
             <td class="py-4">${emp.livro}</td>
             <td class="py-4 text-slate-400 text-sm">P: ${emp.dataPrevisao.split('-').reverse().join('/')}</td>
             <td class="py-4">${tagHtml}</td>
