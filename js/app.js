@@ -28,12 +28,21 @@ window.atualizarDashboard = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // TRAVA DE SEGURANÇA - LOGIN
+    // ==========================================
+    const token = sessionStorage.getItem('auth_token');
+    if (!token) {
+        window.location.href = 'login.html';
+        return; 
+    }
+
     initDB();
     initAlunos();
     initEmprestimos(); 
     window.atualizarDashboard();
 
-    // Lógica Universal de Abas (Tabs) - Serve para Alunos e Empréstimos
+    // Lógica Universal de Abas
     const abas = [
         { btns: '.tab-btn', contents: '.tab-content' },
         { btns: '.tab-btn-emp', contents: '.tab-content-emp' }
@@ -61,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Lógica do Menu Mobile e Navegação Principal
+    // Lógica do Menu Mobile
     const btnMobileMenu = document.getElementById('btn-mobile-menu');
     const btnCloseMenu = document.getElementById('btn-close-menu');
     const sidebar = document.getElementById('sidebar');
@@ -104,4 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth < 768 && sidebar) toggleMenu();
         });
     });
+
+    // ==========================================
+    // SISTEMA DE LOGOUT
+    // ==========================================
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
+            sessionStorage.removeItem('auth_token');
+            window.location.href = 'login.html';
+        });
+    }
 });
