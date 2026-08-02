@@ -1,19 +1,12 @@
-// ==========================================
-// MÓDULO DE PERSISTÊNCIA CRÍTICA (STORAGE)
-// ==========================================
-
 export function initDB() {
     if (!localStorage.getItem('db_alunos')) localStorage.setItem('db_alunos', JSON.stringify([]));
     if (!localStorage.getItem('db_emprestimos')) localStorage.setItem('db_emprestimos', JSON.stringify([]));
+    if (!localStorage.getItem('db_historico')) localStorage.setItem('db_historico', JSON.stringify([]));
 }
 
-// --- ALUNOS ---
 export function getAlunos() {
-    try {
-        return JSON.parse(localStorage.getItem('db_alunos')) || [];
-    } catch (e) {
-        return [];
-    }
+    try { return JSON.parse(localStorage.getItem('db_alunos')) || []; } 
+    catch (e) { return []; }
 }
 
 export function salvarAluno(aluno) {
@@ -27,13 +20,9 @@ export function excluirAluno(id) {
     localStorage.setItem('db_alunos', JSON.stringify(alunos));
 }
 
-// --- EMPRÉSTIMOS ---
 export function getEmprestimos() {
-    try {
-        return JSON.parse(localStorage.getItem('db_emprestimos')) || [];
-    } catch (e) {
-        return [];
-    }
+    try { return JSON.parse(localStorage.getItem('db_emprestimos')) || []; } 
+    catch (e) { return []; }
 }
 
 export function salvarEmprestimo(emprestimo) {
@@ -41,12 +30,12 @@ export function salvarEmprestimo(emprestimo) {
     emprestimos.push(emprestimo);
     localStorage.setItem('db_emprestimos', JSON.stringify(emprestimos));
 }
-// --- EMPRÉSTIMOS (Atualização e Histórico Seguro) ---
-export function atualizarEmprestimo(emprestimoAtualizado) {
+
+export function atualizarEmprestimo(emp) {
     let emprestimos = getEmprestimos();
-    const index = emprestimos.findIndex(e => e.id === emprestimoAtualizado.id);
+    const index = emprestimos.findIndex(e => e.id === emp.id);
     if(index !== -1) {
-        emprestimos[index] = emprestimoAtualizado;
+        emprestimos[index] = emp;
         localStorage.setItem('db_emprestimos', JSON.stringify(emprestimos));
     }
 }
@@ -54,16 +43,4 @@ export function atualizarEmprestimo(emprestimoAtualizado) {
 export function excluirEmprestimo(id) {
     let emprestimos = getEmprestimos().filter(e => e.id !== id);
     localStorage.setItem('db_emprestimos', JSON.stringify(emprestimos));
-}
-
-// Histórico Global do Sistema
-export function getHistorico() {
-    try { return JSON.parse(localStorage.getItem('db_historico')) || []; }
-    catch (e) { return []; }
-}
-
-export function salvarHistorico(registro) {
-    const hist = getHistorico();
-    hist.push(registro);
-    localStorage.setItem('db_historico', JSON.stringify(hist));
 }
