@@ -1,19 +1,20 @@
 import { getAlunos, salvarEmprestimo, getEmprestimos, atualizarEmprestimo, excluirEmprestimo } from './storage.js';
 
 export function initEmprestimos() {
-    const selectAluno = document.getElementById('emp-aluno');
-    if(selectAluno) {
-        selectAluno.addEventListener('focus', carregarAlunosSelect);
-        carregarAlunosSelect();
-    }
+    setupBuscaAluno();
 
     const form = document.getElementById('cadastro-emprestimo-form');
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const alunoId = document.getElementById('emp-aluno').value;
+            const alunoId = document.getElementById('emp-aluno-id').value;
+            
+            if(!alunoId) {
+                alert('Por favor, pesquise e selecione um aluno na lista suspensa primeiro.');
+                return;
+            }
+
             const aluno = getAlunos().find(a => a.id === alunoId);
-            if(!aluno) return alert('Selecione um aluno válido.');
             
             const novoEmprestimo = {
                 id: Date.now().toString(),
@@ -26,6 +27,8 @@ export function initEmprestimos() {
 
             salvarEmprestimo(novoEmprestimo);
             form.reset();
+            document.getElementById('emp-aluno-id').value = ''; // Limpa o ID oculto
+            
             alert('Empréstimo registrado!');
             
             const btnLista = document.querySelector('[data-tab="lista-emprestimos"]');
@@ -59,14 +62,65 @@ export function initEmprestimos() {
     renderTabelaEmprestimos();
 }
 
-function carregarAlunosSelect() {
-    const select = document.getElementById('emp-aluno');
-    if(!select) return;
-    const alunos = getAlunos();
-    
-    select.innerHTML = '<option value="" disabled selected>Selecione um aluno...</option>';
-    alunos.forEach(a => {
-        select.innerHTML += `<option value="${a.id}">${a.nome} (${a.turma})</option>`;
+// =====================================
+// CAMPO DE BUSCA INTELIGENTE DE ALUNOS
+// =====================================
+function setupBuscaAluno() {
+    const inputBusca = document.getElementById('emp-aluno-busca');
+    const inputId = document.getElementById('emp-aluno-id');
+    const listaHtml = document.getElementById('emp-aluno-lista');
+
+    if(!inputBusca) return;
+
+    // Quando o usuário digitar
+    inputBusca.addEventListener('input', (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+        inputId.value = ''; // Limpa o ID se a pessoa alterar o texto
+        
+        if (termo.length === 0) {
+            listaHtml.classList.add('hidden');
+            return;
+        }
+
+        const alunos = getAlunos();
+        // Filtra por nome ou matrícula
+        const resultados = alunos.filter(a => a.nome.toLowerCase().includes(termo) || a.matricula.toLowerCase().includes(termo));
+        
+        listaHtml.innerHTML = '';
+        if(resultados.length === 0) {
+            listaHtml.innerHTML = `<li class="p-3 text-slate-500 text-sm">Nenhum aluno encontrado...</li>`;
+        } else {
+            resultados.forEach(aluno => {
+                const li = document.createElement('li');
+                li.className = 'p-3 hover:bg-slate-700 cursor-pointer text-white text-sm border-b border-slate-700/50 flex justify-between items-center';
+                li.innerHTML = `
+                    <span><i class="fa-solid fa-user text-blue-400 mr-2"></i> ${aluno.nome}</span>
+                    <span class="text-xs bg-slate-800 px-2 py-1 rounded text-slate-400">${aluno.turma} | ${aluno.matricula}</span>
+                `;
+                // Quando clicar na sugestão, preenche os campos
+                li.addEventListener('click', () => {
+                    inputBusca.value = aluno.nome;
+                    inputId.value = aluno.id;
+                    listaHtml.classList.add('hidden');
+                });
+                listaHtml.appendChild(li);
+            });
+        }
+        listaHtml.classList.remove('hidden');
+    });
+
+    // Fecha a lista se clicar fora do campo
+    document.addEventListener('click', (e) => {
+        if (!inputBusca.contains(e.target) && !listaHtml.contains(e.target)) {
+            listaHtml.classList.add('hidden');
+        }
+    });
+
+    // Se focar no campo e já tiver algo digitado, mostra a lista novamente
+    inputBusca.addEventListener('focus', () => {
+        if (inputBusca.value.trim().length > 0) {
+            inputBusca.dispatchEvent(new Event('input')); // Força a busca rodar de novo
+        }
     });
 }
 
@@ -113,8 +167,8 @@ export function renderTabelaEmprestimos() {
             : '';
 
         const imgHtml = aluno.foto 
-            ? `<img src="${aluno.foto}" alt="Foto" class="w-12 h-12 object-contain bg-black/20 rounded">`
-            : `<div class="w-12 h-12 flex items-center justify-center bg-slate-800 rounded text-slate-500"><i class="fa-solid fa-user"></i></div>`;
+            ? `<img src="${aluno.foto}" alt="Foto" class="w-12 h-12 object-cover bg-black/20 rounded-lg">`
+            : `<div class="w-12 h-12 flex items-center justify-center bg-slate-800 rounded-lg text-slate-500"><i class="fa-solid fa-user"></i></div>`;
 
         tr.innerHTML = `
             <td class="py-4">${imgHtml}</td>
