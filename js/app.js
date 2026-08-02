@@ -1,35 +1,67 @@
-import { initDB, getAlunos } from './storage.js';
+import { initDB, getAlunos, getEmprestimos } from './storage.js';
 import { initAlunos } from './alunos.js';
+import { initEmprestimos } from './emprestimos.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inicializa o Banco e Módulos
-    initDB();
-    initAlunos();
-
-    // Atualiza Painel Inicial
+window.atualizarDashboard = () => {
     const dashTotal = document.getElementById('dash-total-alunos');
     if(dashTotal) dashTotal.textContent = getAlunos().length;
 
-    // 2. Sistema de Abas (Tabs)
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            tabBtns.forEach(b => {
-                b.classList.remove('active', 'text-blue-400', 'border-blue-500');
-                b.classList.add('text-slate-400', 'border-transparent');
+    const emprestimos = getEmprestimos();
+    const ativos = emprestimos.filter(e => e.status !== 'Devolvido');
+    
+    const dashAtivos = document.getElementById('dash-emprestimos-ativos');
+    if(dashAtivos) dashAtivos.textContent = ativos.length;
+
+    let atrasados = 0;
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+    
+    ativos.forEach(emp => {
+        const prev = new Date(emp.dataPrevisao);
+        prev.setHours(0,0,0,0);
+        prev.setDate(prev.getDate() + 1);
+        if (prev < hoje) atrasados++;
+    });
+
+    const dashAtrasos = document.getElementById('dash-atrasos');
+    if(dashAtrasos) dashAtrasos.textContent = atrasados;
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    initDB();
+    initAlunos();
+    initEmprestimos(); 
+    window.atualizarDashboard();
+
+    // Lógica Universal de Abas (Tabs) - Serve para Alunos e Empréstimos
+    const abas = [
+        { btns: '.tab-btn', contents: '.tab-content' },
+        { btns: '.tab-btn-emp', contents: '.tab-content-emp' }
+    ];
+
+    abas.forEach(grupo => {
+        const botoes = document.querySelectorAll(grupo.btns);
+        const conteudos = document.querySelectorAll(grupo.contents);
+        
+        botoes.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                botoes.forEach(b => {
+                    b.classList.remove('active', 'text-blue-400', 'border-blue-500');
+                    b.classList.add('text-slate-400', 'border-transparent');
+                });
+                btn.classList.add('active', 'text-blue-400', 'border-blue-500');
+                btn.classList.remove('text-slate-400', 'border-transparent');
+                
+                const targetId = btn.getAttribute('data-tab');
+                conteudos.forEach(c => c.classList.add('hidden'));
+                const targetElement = document.getElementById(targetId);
+                if(targetElement) targetElement.classList.remove('hidden');
             });
-            btn.classList.add('active', 'text-blue-400', 'border-blue-500');
-            btn.classList.remove('text-slate-400', 'border-transparent');
-            
-            const targetId = btn.getAttribute('data-tab');
-            tabContents.forEach(c => c.classList.add('hidden'));
-            document.getElementById(targetId).classList.remove('hidden');
         });
     });
 
-    // 3. Sistema de Menu Lateral (Offcanvas Responsivo)
+    // Lógica do Menu Mobile e Navegação Principal
     const btnMobileMenu = document.getElementById('btn-mobile-menu');
     const btnCloseMenu = document.getElementById('btn-close-menu');
     const sidebar = document.getElementById('sidebar');
@@ -38,21 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.page-section');
 
     const toggleMenu = () => {
+        if (!sidebar) return;
         const isClosed = sidebar.classList.contains('-translate-x-full');
         if (isClosed) {
             sidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('hidden');
         } else {
             sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
+            if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
         }
     };
 
-    if(btnMobileMenu) btnMobileMenu.addEventListener('click', toggleMenu);
-    if(btnCloseMenu) btnCloseMenu.addEventListener('click', toggleMenu);
-    if(sidebarOverlay) sidebarOverlay.addEventListener('click', toggleMenu);
+    if (btnMobileMenu) btnMobileMenu.addEventListener('click', toggleMenu);
+    if (btnCloseMenu) btnCloseMenu.addEventListener('click', toggleMenu);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleMenu);
 
-    // 4. Navegação Principal
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -69,11 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 else section.classList.add('hidden');
             });
 
-            // Fecha menu no mobile ao clicar em um link
-            if (window.innerWidth < 768) {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-            }
+            if (window.innerWidth < 768 && sidebar) toggleMenu();
         });
     });
 });
