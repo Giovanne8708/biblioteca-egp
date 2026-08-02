@@ -10,18 +10,18 @@
 </head>
 <body class="bg-[#0F172A] min-h-screen flex font-sans text-slate-200 overflow-hidden">
     
-    <!-- HEADER MOBILE (Visível apenas em telas menores) -->
+    <!-- HEADER MOBILE -->
     <header class="md:hidden fixed top-0 left-0 w-full glass z-30 p-4 flex justify-between items-center border-b border-slate-700/50">
-        <img src="assets/logo.png?v=2" alt="Logo EGP" class="h-8 object-contain">
+        <img src="assets/logo.png" alt="Logo EGP" class="h-8 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/300x100/1E293B/3B82F6?text=BIBLIOTECA'">
         <button id="btn-mobile-menu" class="text-white text-2xl focus:outline-none">
             <i class="fa-solid fa-bars"></i>
         </button>
     </header>
 
-    <!-- SIDEBAR (Menu Lateral) - Responsivo -->
+    <!-- SIDEBAR (MENU LATERAL) -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out w-64 glass border-r border-slate-700/50 flex flex-col h-screen z-40 bg-[#0F172A] md:bg-transparent">
         <div class="p-6 border-b border-slate-700/50 flex justify-between md:justify-center items-center h-16 md:h-auto mt-16 md:mt-0">
-            <img src="assets/logo.png?v=3" alt="Logo EGP" class="h-10 md:h-12 object-contain hidden md:block" onerror="this.onerror=null; this.src='https://placehold.co/300x100/0F172A/3B82F6?text=BIBLIOTECA+EGP'">
+            <img src="assets/logo.png" alt="Logo EGP" class="h-10 md:h-12 object-contain hidden md:block" onerror="this.onerror=null; this.src='https://placehold.co/300x100/1E293B/3B82F6?text=BIBLIOTECA'">
             <button id="btn-close-menu" class="md:hidden text-slate-400 text-2xl absolute top-4 right-4 focus:outline-none">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -36,10 +36,7 @@
                     <i class="fa-solid fa-user-graduate w-6"></i> Alunos
                 </a>
                 <a href="#" data-target="emprestimos" class="nav-link text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-hand-holding-hand w-6"></i> Empréstimos
-                </a>
-                <a href="#" data-target="configuracoes" class="nav-link text-slate-400 hover:bg-slate-800/50 hover:text-white flex items-center px-4 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-gear w-6"></i> Configurações
+                    <i class="fa-solid fa-book w-6"></i> Empréstimos
                 </a>
             </nav>
         </div>
@@ -50,20 +47,20 @@
         </div>
     </aside>
 
-    <!-- OVERLAY MOBILE (Fundo escuro ao abrir o menu) -->
+    <!-- OVERLAY MOBILE -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden"></div>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative pt-16 md:pt-0 w-full">
-        <!-- Efeitos visuais mantidos -->
+        <!-- Luz de Fundo -->
         <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 pointer-events-none"></div>
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8 relative z-10 w-full">
             
-            <!-- SEÇÃO: DASHBOARD -->
-            <section id="dashboard" class="page-section w-full animate-fade-in">
+            <!-- SEÇÃO 1: DASHBOARD -->
+            <section id="dashboard" class="page-section w-full animate-fade-in block">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">Visão Geral</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8" id="dashboard-cards">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
                     <div class="glass rounded-2xl p-6">
                         <div class="flex justify-between items-center mb-2">
                             <h3 class="text-slate-400 font-medium">Alunos</h3>
@@ -88,16 +85,16 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: ALUNOS -->
+            <!-- SEÇÃO 2: ALUNOS -->
             <section id="alunos" class="page-section hidden w-full animate-fade-in">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">Gestão de Alunos</h2>
                 <div class="glass rounded-2xl overflow-hidden w-full">
                     
                     <div class="flex overflow-x-auto border-b border-slate-700/50 bg-[#1E293B]/50 no-scrollbar">
-                        <button class="tab-btn active whitespace-nowrap px-6 py-4 text-sm font-medium text-blue-400 border-b-2 border-blue-500 focus:outline-none" data-tab="lista-alunos">
+                        <button class="tab-btn active whitespace-nowrap px-6 py-4 text-sm font-medium text-blue-400 border-b-2 border-blue-500" data-tab="lista-alunos">
                             <i class="fa-solid fa-list mr-2"></i> Alunos Cadastrados
                         </button>
-                        <button class="tab-btn whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 focus:outline-none" data-tab="form-aluno">
+                        <button class="tab-btn whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent" data-tab="form-aluno">
                             <i class="fa-solid fa-user-plus mr-2"></i> Novo Cadastro
                         </button>
                     </div>
@@ -113,9 +110,7 @@
                                         <th class="pb-3 font-medium text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tabela-alunos" class="text-sm">
-                                    <!-- JS renderiza aqui -->
-                                </tbody>
+                                <tbody id="tabela-alunos" class="text-sm"></tbody>
                             </table>
                         </div>
                     </div>
@@ -141,12 +136,11 @@
                                         <option value="Manhã">Manhã</option>
                                         <option value="Tarde">Tarde</option>
                                         <option value="Noite">Noite</option>
-                                        <option value="Integral">Integral</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="flex justify-end pt-4 border-t border-slate-700/50">
-                                <button type="submit" class="w-full md:w-auto h-12 bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-lg font-medium transition-all flex items-center justify-center gap-2">
+                                <button type="submit" class="w-full md:w-auto h-12 bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-lg font-medium transition-all">
                                     <i class="fa-solid fa-save"></i> Salvar Aluno
                                 </button>
                             </div>
@@ -155,18 +149,16 @@
                 </div>
             </section>
             
-            <!-- Outras seções continuam ocultas até serem implementadas com a mesma lógica -->
-            <section id="emprestimos" class="page-section hidden w-full animate-fade-in"><h2 class="text-white text-2xl font-bold">Empréstimos</h2></section>
-            <!-- SEÇÃO: EMPRÉSTIMOS -->
+            <!-- SEÇÃO 3: EMPRÉSTIMOS -->
             <section id="emprestimos" class="page-section hidden w-full animate-fade-in">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">Gestão de Empréstimos</h2>
                 <div class="glass rounded-2xl overflow-hidden w-full">
                     
                     <div class="flex overflow-x-auto border-b border-slate-700/50 bg-[#1E293B]/50 no-scrollbar">
-                        <button class="tab-btn-emp active whitespace-nowrap px-6 py-4 text-sm font-medium text-blue-400 border-b-2 border-blue-500 focus:outline-none" data-tab="lista-emprestimos">
+                        <button class="tab-btn-emp active whitespace-nowrap px-6 py-4 text-sm font-medium text-blue-400 border-b-2 border-blue-500" data-tab="lista-emprestimos">
                             <i class="fa-solid fa-list mr-2"></i> Empréstimos Ativos
                         </button>
-                        <button class="tab-btn-emp whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 focus:outline-none" data-tab="form-emprestimo">
+                        <button class="tab-btn-emp whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent" data-tab="form-emprestimo">
                             <i class="fa-solid fa-book-open mr-2"></i> Novo Empréstimo
                         </button>
                     </div>
@@ -178,14 +170,12 @@
                                     <tr class="text-slate-400 border-b border-slate-700/50 text-sm">
                                         <th class="pb-3 font-medium">Aluno</th>
                                         <th class="pb-3 font-medium">Livro</th>
-                                        <th class="pb-3 font-medium">Data (Previsão)</th>
+                                        <th class="pb-3 font-medium">Datas</th>
                                         <th class="pb-3 font-medium">Status</th>
                                         <th class="pb-3 font-medium text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tabela-emprestimos" class="text-sm">
-                                    <!-- JS Renderiza -->
-                                </tbody>
+                                <tbody id="tabela-emprestimos" class="text-sm"></tbody>
                             </table>
                         </div>
                     </div>
@@ -195,9 +185,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
                                     <label class="block text-sm text-slate-400 mb-1">Selecionar Aluno *</label>
-                                    <select id="emp-aluno" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none">
-                                        <!-- Preenchido via JS -->
-                                    </select>
+                                    <select id="emp-aluno" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none"></select>
                                 </div>
                                 <div>
                                     <label class="block text-sm text-slate-400 mb-1">Título do Livro *</label>
@@ -215,13 +203,9 @@
                                     <label class="block text-sm text-slate-400 mb-1">Devolução Prevista *</label>
                                     <input type="date" id="emp-data-prevista" required class="w-full h-12 bg-[#0F172A] border border-slate-700 rounded-lg px-4 text-white focus:border-blue-500 outline-none">
                                 </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm text-slate-400 mb-1">Observações</label>
-                                    <textarea id="emp-obs" rows="2" class="w-full bg-[#0F172A] border border-slate-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none"></textarea>
-                                </div>
                             </div>
                             <div class="flex justify-end pt-4 border-t border-slate-700/50">
-                                <button type="submit" class="w-full md:w-auto h-12 bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-lg font-medium transition-all flex items-center justify-center gap-2">
+                                <button type="submit" class="w-full md:w-auto h-12 bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-lg font-medium transition-all">
                                     <i class="fa-solid fa-save"></i> Registrar Empréstimo
                                 </button>
                             </div>
@@ -229,3 +213,9 @@
                     </div>
                 </div>
             </section>
+
+        </div>
+    </main>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
