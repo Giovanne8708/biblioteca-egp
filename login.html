@@ -2,73 +2,75 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login | Biblioteca EGP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Arquivo CSS externo para garantir a classe .glass -->
+    <link rel="stylesheet" href="css/style.css"> 
 </head>
-<body class="bg-[#0F172A] min-h-screen flex items-center justify-center font-sans text-slate-200 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+<body class="bg-[#0F172A] min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans text-slate-200 overflow-hidden relative">
     
-    <div class="glass w-full max-w-md p-8 rounded-2xl relative overflow-hidden">
-        <!-- Decoração de fundo -->
-        <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+    <!-- Efeito de Luz de Fundo (mantido, mas otimizado) -->
+    <div class="absolute top-[-10%] right-[-10%] w-64 h-64 md:w-96 md:h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[80px] md:blur-[120px] opacity-10 md:opacity-20 pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-64 h-64 md:w-96 md:h-96 bg-emerald-600 rounded-full mix-blend-multiply filter blur-[80px] md:blur-[120px] opacity-10 pointer-events-none"></div>
+
+    <!-- Container Central Responsivo -->
+    <main class="glass w-full max-w-[90%] md:max-w-md p-6 md:p-8 rounded-3xl relative z-10 shadow-2xl flex flex-col items-center">
         
-        <div class="text-center mb-8 relative z-10">
-            <!-- LOGO COM CACHE BUSTING (?v=1) PARA FORÇAR ATUALIZAÇÃO -->
-            <img src="assets/logo.png?v=1" alt="Logo EGP" class="h-20 mx-auto mb-4 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/150x40/1E293B/e2e8f0?text=EGP+Biblioteca'">
+        <!-- CABEÇALHO & LOGO -->
+        <header class="text-center w-full mb-6 md:mb-8 flex flex-col items-center">
+            <!-- Logo com limite de tamanho no mobile e maior no desktop -->
+            <img src="assets/logo.png?v=2" alt="Logo EGP" 
+                 class="h-16 md:h-20 w-auto max-w-[120px] md:max-w-[160px] object-contain mb-3 md:mb-4 transition-all" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/150x40/1E293B/e2e8f0?text=EGP+Biblioteca'">
             
-            <h1 class="text-2xl font-bold text-white">Sistema de Biblioteca</h1>
-            <p class="text-slate-400 text-sm mt-1">Acesso Restrito</p>
-        </div>
+            <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">Sistema de Biblioteca</h1>
+            <p class="text-slate-400 text-xs md:text-sm mt-1">Acesso Restrito</p>
+        </header>
 
-        <form id="form-login" class="space-y-5 relative z-10">
-            <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Usuário</label>
-                <div class="relative">
-                    <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-500"></i>
-                    <input type="text" id="usuario" required class="w-full bg-[#1E293B] border border-slate-700 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 transition-colors">
+        <!-- FORMULÁRIO -->
+        <form id="login-form" class="w-full space-y-4 md:space-y-5">
+            <!-- Campo Usuário -->
+            <div class="relative w-full">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-user text-slate-500"></i>
                 </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Senha</label>
-                <div class="relative">
-                    <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-500"></i>
-                    <input type="password" id="senha" required class="w-full bg-[#1E293B] border border-slate-700 rounded-lg py-3 pl-10 pr-10 text-white focus:outline-none focus:border-blue-500 transition-colors">
-                    <button type="button" id="toggle-senha" class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-300">
-                        <i class="fa-solid fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div id="msg-erro" class="hidden text-red-400 text-sm text-center bg-red-900/20 py-2 rounded">
-                Usuário ou senha incorretos.
+                <input type="text" id="usuario" required placeholder="Digite seu usuário" 
+                       class="w-full min-h-[48px] bg-[#1E293B]/50 border border-slate-700/50 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm md:text-base shadow-inner">
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all">
+            <!-- Campo Senha -->
+            <div class="relative w-full">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-lock text-slate-500"></i>
+                </div>
+                <input type="password" id="senha" required placeholder="Digite sua senha" 
+                       class="w-full min-h-[48px] bg-[#1E293B]/50 border border-slate-700/50 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm md:text-base shadow-inner">
+            </div>
+
+            <!-- Mensagem de Erro (Escondida por padrão) -->
+            <div id="erro-msg" class="hidden bg-red-900/30 border border-red-500/50 text-red-400 text-xs md:text-sm p-3 rounded-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>Usuário ou senha incorretos.</span>
+            </div>
+
+            <!-- Botão de Acesso -->
+            <button type="submit" 
+                    class="w-full min-h-[48px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 shadow-[0_0_15px_rgba(37,99,235,0.2)] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] active:scale-[0.98] flex justify-center items-center gap-2 mt-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 Entrar no Sistema
             </button>
         </form>
-    </div>
+    </main>
 
+    <!-- Script de validação isolado para evitar conflito de cache com o app principal -->
     <script>
-        // Lógica isolada apenas para o Login
-        document.getElementById('toggle-senha').addEventListener('click', function() {
-            const input = document.getElementById('senha');
-            const icon = this.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        });
-
-        document.getElementById('form-login').addEventListener('submit', (e) => {
+        document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const usuario = document.getElementById('usuario').value;
             const senha = document.getElementById('senha').value;
+            const erroMsg = document.getElementById('erro-msg');
 
             // Validação fictícia para o MVP
             if (usuario === 'admin' && senha === '123456') {
@@ -76,9 +78,22 @@
                 sessionStorage.setItem('usuario_logado', 'Administrador');
                 window.location.href = 'index.html';
             } else {
-                document.getElementById('msg-erro').classList.remove('hidden');
+                erroMsg.classList.remove('hidden');
+                // Adiciona uma tremidinha no card ao errar a senha
+                const form = document.querySelector('main');
+                form.classList.add('animate-[shake_0.5s_ease-in-out]');
+                setTimeout(() => form.classList.remove('animate-[shake_0.5s_ease-in-out]'), 500);
             }
         });
     </script>
+    <!-- Adicionando keyframes para a animação de erro -->
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+    </style>
 </body>
 </html>
