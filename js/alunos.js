@@ -6,23 +6,35 @@ export function initAlunos() {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const novoAluno = {
-                id: Date.now().toString(),
-                matricula: document.getElementById('aluno-matricula').value.trim(),
-                nome: document.getElementById('aluno-nome').value.trim(),
-                turma: document.getElementById('aluno-turma').value.trim(),
-                turno: document.getElementById('aluno-turno').value
+            const fileInput = document.getElementById('aluno-foto');
+            const salvar = (fotoBase64) => {
+                const novoAluno = {
+                    id: Date.now().toString(),
+                    matricula: document.getElementById('aluno-matricula').value.trim(),
+                    nome: document.getElementById('aluno-nome').value.trim(),
+                    turma: document.getElementById('aluno-turma').value.trim(),
+                    turno: document.getElementById('aluno-turno').value,
+                    foto: fotoBase64 // Salva a imagem
+                };
+
+                salvarAluno(novoAluno);
+                form.reset();
+                alert('Aluno salvo com sucesso!');
+                
+                const btnLista = document.querySelector('[data-tab="lista-alunos"]');
+                if(btnLista) btnLista.click();
+                
+                renderTabelaAlunos();
+                if(window.atualizarDashboard) window.atualizarDashboard();
             };
 
-            salvarAluno(novoAluno);
-            form.reset();
-            alert('Aluno salvo com sucesso!');
-            
-            const btnLista = document.querySelector('[data-tab="lista-alunos"]');
-            if(btnLista) btnLista.click();
-            
-            renderTabelaAlunos();
-            if(window.atualizarDashboard) window.atualizarDashboard();
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (evento) => salvar(evento.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                salvar('');
+            }
         });
     }
 
@@ -45,14 +57,21 @@ export function renderTabelaAlunos() {
     tbody.innerHTML = '';
 
     if (alunos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-500">Nenhum aluno cadastrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-500">Nenhum aluno cadastrado.</td></tr>`;
         return;
     }
 
     alunos.forEach(aluno => {
         const tr = document.createElement('tr');
         tr.className = 'border-b border-slate-700/50 text-slate-300';
+        
+        // Exibe a foto original ou um ícone padrão cinza se não houver foto
+        const imgHtml = aluno.foto 
+            ? `<img src="${aluno.foto}" alt="Foto" class="w-12 h-12 object-contain bg-black/20 rounded">`
+            : `<div class="w-12 h-12 flex items-center justify-center bg-slate-800 rounded text-slate-500"><i class="fa-solid fa-user"></i></div>`;
+
         tr.innerHTML = `
+            <td class="py-4">${imgHtml}</td>
             <td class="py-4 font-medium text-white">${aluno.matricula}</td>
             <td class="py-4">${aluno.nome}</td>
             <td class="py-4">${aluno.turma} - ${aluno.turno}</td>
